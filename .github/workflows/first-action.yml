@@ -1,0 +1,19 @@
+# reserved keyword: name, on, jobs, runs-on, steps
+name: First workflow # name of workflow
+  # when do you execute workflow: on과 name은 모두 github action에서 보유하고 있는 keyword다.  
+  # on 다음에는 이 workflow를 실행시키도록 야기시킬 이벤트를 정의한다.  
+  # event의 이름을 일단 workflow_dispatch 라 하자.  
+on: workflow_dispatch  
+jobs: 
+  # job의 name들을 입력한다. 여기서 name은 자유롭게 입력하면 된다. 이 name은 여러 job들 중 해당 job을 구분하는 식별자가 된다.  
+  # firstjob으로 해도 된다.
+  first-job:
+    # runs-on은 github action에 내장된 keyword다.  
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print greeting
+        run: echo "Hello World!"
+      - name: Print Goodbye
+        run: echo "Done - bye!"
+        
+  
