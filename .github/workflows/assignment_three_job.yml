@@ -1,4 +1,4 @@
-name: Assignment
+name: Assignment - three jobs
 on:
   push:
     branches:
@@ -18,9 +18,7 @@ jobs:
       - name: Prettier install
         run: yarn prettier
       - name: Run linters
-        uses: wearerequired/lint-action@v2
-        with:
-          prettier: true 
+        run: npm run lint 
   test:
     needs: lint
     runs-on: ubuntu-latest
