@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies   
         uses: npm ci 
       - name: Run linters
-        uses: wearerequired/lint-action@v2.3.0
+        uses: wearerequired/lint-action@v2
         with:
           eslint: true
           prettier: true 
