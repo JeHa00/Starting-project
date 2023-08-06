@@ -1,0 +1,52 @@
+name: Lint-Test-Build
+on:
+  push:
+    branches:
+      - main  
+jobs:
+  lint:
+    runs-on: ubuntu-latest  
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+            node-version: 18 
+      - name: Install dependencies   
+        uses: npm ci 
+      - name: Run linters
+        uses: wearerequired/lint-action@v2.3.0
+        with:
+          eslint: true
+          prettier: true 
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+            node-version: 18 
+      - name: Install dependencies   
+        uses: npm ci 
+      - name: Run tests
+        uses: npm test  
+  build: 
+    needs: test  
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+            node-version: 18 
+      - name: Install dependencies   
+        uses: npm ci 
+      - name: Build project  
+        run: npm run build  
+      - name: Deploy  
+        run: echo "Deploying..."
