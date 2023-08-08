@@ -1,26 +1,21 @@
 name: Deployment Exercise 2
-on: push
+on: 
+  push:
+    branches:
+      - main  
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps: 
-      - name: Get code
-        uses: actions/checkout@v3
-      - name: Install dependencies
-        run: npm ci
-      - name: Lint
-        run: npm run lint
   test:
-    needs: lint
     runs-on: ubuntu-latest
     steps: 
       - name: Get code
         uses: actions/checkout@v3
       - name: Install dependencies
         run: npm ci
+      - name: Lint code
+        run: npm run lint  
       - name: Test code
         run: npm run test
-  deploy:
+  build:
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +23,11 @@ jobs:
         uses: actions/checkout@v3
       - name: Install dependencies
         run: npm ci
-      - name: Build code
+      - name: Build website  
         run: npm run build
-      - name: Deploy code
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
         run: echo "Deploying..."
