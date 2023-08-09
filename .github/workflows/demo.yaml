@@ -18,6 +18,9 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    # code added
+    outputs:
+      script-file:  ${{ steps.publish.outputs.file-name }}
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -25,24 +28,36 @@ jobs:
         run: npm ci
       - name: Build website  
         run: npm run build
+      # add code
+      - name: Publish JS filename  
+        id: publish
+        run: find dist/assets/*.js -type f -execdir echo 'file-name={}' >> &GITHUB_OUTPUT ';'
+      #
       - name: Upload artifacts  
         uses: actions/upload-artifact@v3  
         with:
-          name: dist-files  
-          path: dist
-
-# package.json은 경로를 여러 개 입력하는 방법을 보여주기 위해 입력한 예시
+          name: dist-files
+          path: dist 
+ 
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # 추가한 단계
       - name: Get build artifacts 
         uses: actions/download-artifact@v3 
         with:
           name: dist-files  
       - name: Output contents
         run: ls  
+      # steps added  
+      - name: Needs 
+        run: echo "${{ needs }}"
+      - name: Build
+        run: echo "${{ needs.build }}"
+      - name: Output 
+        run: echo "${{ needs.build.outputs}}"
+      - name: Output filename 
+        run: echo "${{ needs.build.outputs.script-file }}"
       - name: Deploy
         run: echo "Deploying..."
