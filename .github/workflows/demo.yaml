@@ -60,13 +60,6 @@ jobs:
           name: dist-files  
       - name: Output contents
         run: ls  
-      # steps added  
-      - name: Needs 
-        run: echo "${{ needs }}"
-      - name: Build
-        run: echo "${{ needs.build }}"
-      - name: Output 
-        run: echo "${{ needs.build.outputs}}"
       - name: Output filename 
         run: echo "${{ needs.build.outputs.script-file }}"
       - name: Deploy
