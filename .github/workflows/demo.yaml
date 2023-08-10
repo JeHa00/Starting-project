@@ -4,12 +4,12 @@ on:
     branches:
       - main  
 env:
-  DB_NAME: test
+  DB_NAME: ${{secrets.DB_NAME}}
 jobs:
   test:
     env:
-      DB_USERNAME: project
-      DB_PASSWORD: 1234
+      DB_USERNAME: ${{secrets.DB_USERNAME}}
+      DB_PASSWORD: ${{secrets.DB_PASSOWRD}}
     runs-on: ubuntu-latest
     steps: 
       - name: Get code
