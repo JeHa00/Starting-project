@@ -4,7 +4,7 @@ on:
     branches:
       - main  
 env:
-  DB_NAME: project
+  DB_NAME: test
 jobs:
   test:
     env:
