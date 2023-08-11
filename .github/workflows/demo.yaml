@@ -22,13 +22,12 @@ jobs:
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}  
       - name: Install dependencies
         run: npm ci
-      # code added
       - name: Check DB information
         run: |
           echo "DB_NAME: ${{ env.DB_NAME }}" 
           echo "DB_USERNAME: $DB_USERNAME" 
           echo "DB_PASSWORD: $DB_PASSWORD" 
-      #
+  
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -44,10 +43,8 @@ jobs:
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}  
       - name: Install dependencies
         run: npm ci
-      # add code
       - name: Check DB information
         run: |
           echo "DB_NAME: ${{ env.DB_NAME }}" 
           echo "DB_USERNAME: $DB_USERNAME" 
           echo "DB_PASSWORD: $DB_PASSWORD" 
-      #
