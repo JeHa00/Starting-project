@@ -1,51 +1,75 @@
-name: Demo
+name: Website Deployment
 on:
   push:
     branches:
-      - main  
-env:
-  DB_NAME: ${{secrets.DB_NAME}}
+      - main
 jobs:
-  test:
-    environment: testing 
-    env:
-      DB_USERNAME: ${{secrets.DB_USERNAME}}
-      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+  lint:
     runs-on: ubuntu-latest
-    steps: 
-      - name: Get code
-        uses: actions/checkout@v3
-      - name: Cache dependencies
-        uses: actions/cache@v3  
-        with:
-          path: ~/.npm
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}  
-      - name: Install dependencies
-        run: npm ci
-      - name: Check DB information
-        run: |
-          echo "DB_NAME: ${{ env.DB_NAME }}" 
-          echo "DB_USERNAME: $DB_USERNAME" 
-          echo "DB_PASSWORD: $DB_PASSWORD" 
-  
-  build:
-    environment: deploy
-    needs: test
-    runs-on: ubuntu-latest
-    outputs:
-      script-file:  ${{ steps.publish.outputs.file-name }}
     steps:
       - name: Get code
         uses: actions/checkout@v3
       - name: Cache dependencies
-        uses: actions/cache@v3  
+        id: cache
+        uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}  
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         run: npm ci
-      - name: Check DB information
-        run: |
-          echo "DB_NAME: ${{ env.DB_NAME }}" 
-          echo "DB_USERNAME: $DB_USERNAME" 
-          echo "DB_PASSWORD: $DB_PASSWORD" 
+      - name: Lint code
+        run: npm run lint
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Test code
+        run: npm run test
+      - name: Upload test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: test.json
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Build website
+        id: build-website
+        run: npm run build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+      - name: Output contents
+        run: ls
+      - name: Deploy
+        run: echo "Deploying..."
