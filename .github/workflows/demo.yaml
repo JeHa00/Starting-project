@@ -33,8 +33,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Test code
+        id: run-tests 
         run: npm run test
       - name: Upload test report
+      # code 추가
+        if: failure() && steps.run-tests.outcome == 'failure'  # github actions context를 확인하면 여러 가지를 확인할 수 있다. 
+        # 실패여야만 실행된다.   
+        # ${{}}을 작성하지 않아도 된다. 
+      #
         uses: actions/upload-artifact@v3
         with:
           name: test-report
