@@ -1,0 +1,8 @@
+name: Reusable Deploy
+on: workflow_call # workflow_dispatch가 아니다. 이는 다른 workflow에서 호출되는 걸 허용한다는 의미다.  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Output information
+        run: echo "Deploying & uploading..."
