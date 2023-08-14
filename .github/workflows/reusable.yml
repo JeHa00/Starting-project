@@ -1,8 +1,22 @@
 name: Reusable Deploy
-on: workflow_call # workflow_dispatch가 아니다. 이는 다른 workflow에서 호출되는 걸 허용한다는 의미다.  
+on: 
+  workflow_call:
+    inputs: 
+      artifact-name:
+        description: The name of the deployable artifact files
+        required: false # required가 false이면 workflow는 value를 제공하지 않아도 호출되는 게 가능하다는 의미
+          # false면 불필요하다.
+        default: dist 
+        type: string 
 jobs:
   deploy:
     runs-on: ubuntu-latest 
     steps:
+      - name: Get code
+        uses: actions/download-artifact@v3 
+        with:
+          name: ${{ inputs.artifact-name }}
+      - name: List files
+        run: ls
       - name: Output information
         run: echo "Deploying & uploading..."
