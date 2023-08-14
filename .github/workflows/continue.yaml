@@ -1,4 +1,4 @@
-name: Demo
+name: continue
 on:
   push:
     branches:
@@ -37,7 +37,6 @@ jobs:
         run: npm run test
       - name: Upload test report
         continue-on-error: true  
-        if: failure() && steps.run-tests.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: test-report
