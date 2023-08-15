@@ -4,8 +4,7 @@ on:
     inputs: 
       artifact-name:
         description: The name of the deployable artifact files
-        required: false # required가 false이면 workflow는 value를 제공하지 않아도 호출되는 게 가능하다는 의미
-          # false면 불필요하다.
+        required: false
         default: dist 
         type: string 
 jobs:
